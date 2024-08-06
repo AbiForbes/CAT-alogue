@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pink_light">#FFDE8FB3</color>
+    <color name="pink_mid">#FF9F2F62</color>
+    <color name="pink_dark">#FF2E0D1C</color>
+    <color name="pink_grey">#FF64545C</color>
+
+    <color name="yellow_light">#FFE4DC94</color>
+    <color name="yellow_mid">#FF8C843C</color>
+    <color name="yellow_dark">#FF312E15</color>
+
+    <color name="white">#FFFFFFFF</color>
+    <color name="grey_lightest">#FFF2F2F2</color>
+    <color name="grey_light">#FF9CA4A4</color>
+    <color name="grey_mid">#FF747C7C</color>
+    <color name="grey_dark">#FF5C6464</color>
+    <color name="grey_darker">#FF333333</color>
+    <color name="grey_darkest">#FF202020</color>
+    <color name="black">#FF000000</color>
+
+    <color name="blue_light">#FF7CD4E4</color>
+    <color name="blue_mid">#FF6D7CC6</color>
+    <color name="blue_dark">#FF045CCC</color>
+    <color name="blue_darkest">#FF011C3E</color>
+</resources>

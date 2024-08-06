@@ -18,8 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -29,14 +30,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
@@ -68,14 +71,6 @@ enum class Screen {
 
 sealed class NavigationItem(val route: String) {
     object Home : NavigationItem(Screen.HOME.name)
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -122,13 +117,6 @@ fun RootScreen() {
 fun HomeScreen(vm: CatViewModel, navController: NavHostController) {
 
     Scaffold(
-        bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-            ) {
-            }
-        },
     ) { innerPadding ->
         InnerContent(innerPadding, vm, navController)
     }
@@ -139,16 +127,27 @@ fun InnerContent(innerPadding: PaddingValues, vm: CatViewModel, navController: N
     LaunchedEffect(Unit, block = {
         vm.getCatImageList()
     })
+    val listState = rememberLazyListState()
+    val isAtBottom = remember {
+        derivedStateOf {
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == vm.imageList.lastIndex
+        }
+    }
     Surface(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding),
         color = MaterialTheme.colorScheme.background
     ) {
-        LazyColumn (horizontalAlignment = Alignment.CenterHorizontally) {
-            items(vm.imageList){ cat ->
-                Cat(image = cat.url, name = cat.breeds[0].name, id = cat.id, navController)
-                Log.d("MainActivity", cat.toString())
+        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally) {
+            LazyColumn(state=listState, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                items(vm.imageList) { cat ->
+                    Cat(image = cat.url, name = cat.breeds[0].name, id = cat.id, navController)
+                    Log.d("MainActivity", cat.toString())
+                }
+            }
+            if (isAtBottom.value) {
+                vm.catListComplete = false
             }
         }
     }
@@ -187,14 +186,6 @@ fun Cat(image: String, name: String, id: String, navController: NavHostControlle
  }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CATalogueTheme {
-        Greeting("Android")
-    }
-}
-
 @Composable
 fun CatScreen(value: String, vm : CatInfoViewModel) {
     CATalogueTheme {
@@ -210,6 +201,7 @@ fun CatScreen(value: String, vm : CatInfoViewModel) {
 
 @Composable
 fun CatInfo(cat: IdResponse){
+    val uriHandler = LocalUriHandler.current
     CATalogueTheme {
         Surface(
             modifier = Modifier
@@ -229,14 +221,21 @@ fun CatInfo(cat: IdResponse){
                             modifier = Modifier,
                             style = MaterialTheme.typography.titleLarge
                         )
+                    Text(text = cat.breeds[0].origin, style = MaterialTheme.typography.bodySmall)
                     Spacer(modifier = Modifier.padding(12.dp))
+                    Text(text = "Traits: ", style = MaterialTheme.typography.titleSmall)
+                    Spacer(modifier = Modifier.padding(2.dp))
                     Text(text=cat.breeds[0].temperament, style = MaterialTheme.typography.bodyLarge)
                 }
             }
                 Spacer(modifier = Modifier.padding(12.dp))
+                Text(text = "Description: ", style = MaterialTheme.typography.titleSmall)
+                Spacer(modifier = Modifier.padding(2.dp))
             Text(text = cat.breeds[0].description, style = MaterialTheme.typography.bodyLarge)
-
-
+                Spacer(modifier = Modifier.padding(12.dp))
+                Button(onClick = { uriHandler.openUri(cat.breeds[0].wikipedia_url)}, modifier = Modifier.fillMaxWidth()) {
+                    Text(text = "Find out more...", style = MaterialTheme.typography.bodyLarge)
+                }
             }
         }
     }

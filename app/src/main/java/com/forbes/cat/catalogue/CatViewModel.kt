@@ -11,23 +11,30 @@ import kotlinx.coroutines.launch
 
 class CatViewModel: ViewModel() {
         private val _imageList = mutableStateListOf<ImageResponse>()
+        private var _hasBeenCalled = false
         var errorMessage: String by mutableStateOf("")
         val imageList: List<ImageResponse>
             get() = _imageList
+        var catListComplete: Boolean
+            get() = _hasBeenCalled
+            set(hasBeenCalled) {_hasBeenCalled = hasBeenCalled
+            getCatImageList()}
 
         fun getCatImageList() {
             viewModelScope.launch {
                 val apiService = BreedApi
-                try {
-                    _imageList.clear()
-                    Log.d("CatViewModel", imageList.toString())
-                    _imageList.addAll(apiService.breedService.getImages("live_wB12GWcB6KarWdktFbIuJqnslDelGZPf3lkd9p5MX1tgd8WM4EWTxN94z2OuH4hR", 1, 10))
-                    val list = apiService.breedService.getImages("live_wB12GWcB6KarWdktFbIuJqnslDelGZPf3lkd9p5MX1tgd8WM4EWTxN94z2OuH4hR", 1, 10)
-                    Log.d("CatViewModel2", list.toString())
+                if(!_hasBeenCalled){
+                    try {
+                        Log.d("CatViewModel", imageList.toString())
+                        _imageList.addAll(apiService.breedService.getImages("live_wB12GWcB6KarWdktFbIuJqnslDelGZPf3lkd9p5MX1tgd8WM4EWTxN94z2OuH4hR", 1, 10))
+                        val list = apiService.breedService.getImages("live_wB12GWcB6KarWdktFbIuJqnslDelGZPf3lkd9p5MX1tgd8WM4EWTxN94z2OuH4hR", 1, 10)
+                        Log.d("CatViewModel2", list.toString())
+                        _hasBeenCalled = true
 
-                } catch (e: Exception) {
-                    errorMessage = e.message.toString()
-                    Log.e("CatViewModel", errorMessage)
+                    } catch (e: Exception) {
+                        errorMessage = e.message.toString()
+                        Log.e("CatViewModel", errorMessage)
+                    }
                 }
             }
         }

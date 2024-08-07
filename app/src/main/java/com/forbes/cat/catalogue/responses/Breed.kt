@@ -1,4 +1,4 @@
-package com.forbes.cat.catalogue
+package com.forbes.cat.catalogue.responses
 
 data class Breed(
     val adaptability: Int,

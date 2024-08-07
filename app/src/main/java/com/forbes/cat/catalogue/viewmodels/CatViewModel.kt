@@ -1,4 +1,4 @@
-package com.forbes.cat.catalogue
+package com.forbes.cat.catalogue.viewmodels
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.forbes.cat.catalogue.api.BreedApi
+import com.forbes.cat.catalogue.responses.ImageResponse
 import kotlinx.coroutines.launch
 
 class CatViewModel: ViewModel() {
@@ -22,12 +24,11 @@ class CatViewModel: ViewModel() {
 
         fun getCatImageList() {
             viewModelScope.launch {
-                val apiService = BreedApi
                 if(!_hasBeenCalled){
                     try {
                         Log.d("CatViewModel", imageList.toString())
-                        _imageList.addAll(apiService.breedService.getImages("live_wB12GWcB6KarWdktFbIuJqnslDelGZPf3lkd9p5MX1tgd8WM4EWTxN94z2OuH4hR", 1, 10))
-                        val list = apiService.breedService.getImages("live_wB12GWcB6KarWdktFbIuJqnslDelGZPf3lkd9p5MX1tgd8WM4EWTxN94z2OuH4hR", 1, 10)
+                        _imageList.addAll(BreedApi.breedService.getImages("live_wB12GWcB6KarWdktFbIuJqnslDelGZPf3lkd9p5MX1tgd8WM4EWTxN94z2OuH4hR", 1, 10))
+                        val list = BreedApi.breedService.getImages("live_wB12GWcB6KarWdktFbIuJqnslDelGZPf3lkd9p5MX1tgd8WM4EWTxN94z2OuH4hR", 1, 10)
                         Log.d("CatViewModel2", list.toString())
                         _hasBeenCalled = true
 

@@ -1,19 +1,12 @@
-package com.forbes.cat.catalogue
+package com.forbes.cat.catalogue.api
 
+import com.forbes.cat.catalogue.responses.IdResponse
+import com.forbes.cat.catalogue.responses.ImageResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-
-
-//private fun createDefaultOkHttpClient(): OkHttpClient {
-//    val interceptor = HttpLoggingInterceptor()
-//    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-//    return OkHttpClient().newBuilder()
-//        .addInterceptor(interceptor)
-//        .build()
-//}
 
 interface BreedService {
     @GET("/v1/images/search")
@@ -26,7 +19,7 @@ interface BreedService {
     @GET("/v1/images/{id}")
     suspend fun getCatInfo(
         @Path("id") id:String
-    ):IdResponse
+    ): IdResponse
 
     @GET("/v1/images/search")
     suspend fun getFavouriteCatExample(
@@ -41,7 +34,6 @@ object BreedApi {
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://api.thecatapi.com/")
         .addConverterFactory(GsonConverterFactory.create())
-//        .client(createDefaultOkHttpClient())
         .build()
-    val breedService:BreedService= retrofit.create(BreedService::class.java)
+    val breedService: BreedService = retrofit.create(BreedService::class.java)
 }

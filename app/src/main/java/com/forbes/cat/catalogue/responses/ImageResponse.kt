@@ -1,6 +1,6 @@
-package com.forbes.cat.catalogue
+package com.forbes.cat.catalogue.responses
 
-data class IdResponse(
+data class ImageResponse(
     val breeds: List<Breed>,
     val height: Int,
     val id: String,

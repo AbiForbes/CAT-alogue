@@ -27,6 +27,13 @@ interface BreedService {
     suspend fun getCatInfo(
         @Path("id") id:String
     ):IdResponse
+
+    @GET("/v1/images/search")
+    suspend fun getFavouriteCatExample(
+        @Query("api_key") apiKey: String,
+        @Query("breed_ids") breedId: String,
+        @Query("limit") limit: Int = 1,
+    ): List<ImageResponse>
 }
 
 

@@ -22,4 +22,6 @@
     <color name="blue_mid">#FF6D7CC6</color>
     <color name="blue_dark">#FF045CCC</color>
     <color name="blue_darkest">#FF011C3E</color>
+
+    <color name="red">#FF901818</color>
 </resources>

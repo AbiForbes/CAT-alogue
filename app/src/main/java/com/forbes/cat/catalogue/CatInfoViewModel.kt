@@ -23,6 +23,7 @@ class CatInfoViewModel: ViewModel() {
                     Log.d("CatInfoViewModel", idList.toString())
                     _idList.value = apiService.breedService.getCatInfo(id)
                     val list = apiService.breedService.getCatInfo(id)
+
                     Log.d("CatInfoViewModel2", list.toString())
 
                 } catch (e: Exception) {
